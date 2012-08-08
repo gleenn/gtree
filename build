@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p out
+javac -Xlint:unchecked -d out src/*.java && java -cp out GTree
