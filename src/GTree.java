@@ -1,104 +1,57 @@
 public class GTree<T extends Comparable<? super T>> {
-  public static void main(final String[] args) {
-    test_contains();
-    test_rightMostLeaf_and_leftMostLeaf();
-    System.out.println();
-  }
-
-  public static void test_contains() {
-    GTree<Integer> gtree = new GTree<Integer>();
-
-    expectEquals(gtree.contains(1), false);
-
-    gtree.add(1);
-    expectEquals(gtree.contains(1), true);
-
-    gtree.add(2);
-    expectEquals(gtree.contains(2), true);
-
-    gtree.remove(1);
-    expectEquals(gtree.contains(1), false);
-    expectEquals(gtree.contains(2), false);
-
-    gtree.remove(2);
-    expectEquals(gtree.contains(2), false);
-  }
-
-  public static void test_rightMostLeaf_and_leftMostLeaf() {
-    GTree<Integer> gtree = new GTree<Integer>();
-
-    expectEquals(gtree.leftMostLeaf(), null);
-    expectEquals(gtree.rightMostLeaf(), null);
-
-    gtree.add(1);
-    expectEquals(gtree.leftMostLeaf().value, 1);
-    expectEquals(gtree.rightMostLeaf().value, 1);
-
-    gtree.add(2);
-    expectEquals(gtree.leftMostLeaf().value, 1);
-    expectEquals(gtree.rightMostLeaf().value, 2);
-  }
-
-  public static void expectEquals(Integer actual, Integer expected) {
-    if(actual != null && expected != null && actual.equals(expected)) {
-      System.out.print(".");
-    } else {
-      System.out.print("F");
-    }
-  }
-
-  public static void expectEquals(Node actual, Node expected) {
-    if(actual != null && expected != null && actual.equals(expected)) {
-      System.out.print(".");
-    } else {
-      System.out.print("F");
-    }
-  }
-
-  public static void expectEquals(boolean actual, boolean expected) {
-    if(actual == expected) {
-      System.out.print(".");
-    } else {
-      System.out.print("F");
-    }
-  }
-
   public GTree<T> add(T value) {
-    add(value, root);
+    if(root == null) {
+        root = new Node<T>(value, null, null);
+    } else {
+        add(value, root);
+    }
     return this;
   }
 
   private void add(T value, Node<T> node) {
-    if(node == null) {
-      root = new Node<T>(value, null, null);
-      return;
+    if(value.compareTo(node.value) < 0) {
+      if(node.left == null)
+        node.left = new Node<T>(value, null, null);
+      else
+        add(value, node.left);
+    } else {
+      if(node.right == null) {
+        node.right = new Node<T>(value, null, null);
+      } else {
+        add(value, node.right);
+      }
     }
-
-    if(value.compareTo(node.value) < 0)
-      add(value, node.left);
-    else
-      add(value, node.right);
   }
 
   public T remove(T value) {
-    Node<T> nodeForValue = find(value, root);
+    Node<T> parent = findParent(value, root, null);
+    if(parent == null) throw new RuntimeException("Not Found");
+      if(value.compareTo(parent.value) < 0) {
+        parent.left = null;
+      } else {
+        parent.right = null;
+      }
     return value;
   }
 
-  private Node<T> find(T value, Node<T> node) {
-    if(node == null) return null;
+  public T furthestLeaf() {
+      return furthestLeaf(root);
+  }
+
+  private T furthestLeaf(Node<T> node) {
+      return null;
+  }
+
+  private Node<T> findParent(T value, Node<T> node, Node<T> parent) {
+    if(node == null) return parent;
 
     if(value.equals(node.value)) return node;
 
     if(value.compareTo(node.value) < 0) {
-      return find(value, node.left);
+      return findParent(value, node.left, node);
     } else {
-      return find(value, node.right);
+      return findParent(value, node.right, node);
     }
-  }
-
-  private void percolateDown(Node<T> node) {
-
   }
 
   public Node<T> leftMostLeaf() {
@@ -128,7 +81,7 @@ public class GTree<T extends Comparable<? super T>> {
   private boolean contains(T value, Node<T> node) {
     if(node == null) return false;
 
-    if(value.equals(root.value)) return true;
+    if(value.equals(node.value)) return true;
 
     if(value.compareTo(node.value) < 0) {
       return contains(value, node.left);
@@ -158,3 +111,4 @@ public class GTree<T extends Comparable<? super T>> {
     }
   }
 }
+

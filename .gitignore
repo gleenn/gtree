@@ -3,3 +3,6 @@ out/*
 foo
 foo.pub
 *.swp
+.idea
+*.iml
+not-commited
