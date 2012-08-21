@@ -51,8 +51,10 @@ public class GTreeTest {
     @Test
     public void test_furthestLeaf() {
         GTree<Integer> gtree = new GTree<Integer>();
-        for(int i=0; i<5; i++) gtree.add(i);
+        for(int i=1; i<=5; i++) gtree.add(i);
 
-        assertEquals(gtree.furthestLeaf());
+        assertEquals(new Integer(5), gtree.furthestLeaf());
+        gtree.remove(5);
+        assertEquals(new Integer(4), gtree.furthestLeaf());
     }
 }
