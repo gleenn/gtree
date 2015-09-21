@@ -1,3 +1,5 @@
+package gcollections;
+
 public class GTree<T extends Comparable<? super T>> {
   public GTree<T> add(T value) {
     if(root == null) {
@@ -8,7 +10,7 @@ public class GTree<T extends Comparable<? super T>> {
     return this;
   }
 
-  private void add(T value, Node<T> node) {
+  void add(T value, Node<T> node) {
     if(value.compareTo(node.value) < 0) {
       if(node.left == null)
         node.left = new Node<T>(value, null, null);
@@ -42,7 +44,7 @@ public class GTree<T extends Comparable<? super T>> {
     return furthestLeaf(root, 0).node.value;
   }
 
-  private DistNode furthestLeaf(Node<T> node, int distance) {
+  DistNode furthestLeaf(Node<T> node, int distance) {
     DistNode thisDistNode = new DistNode(distance, node);
     DistNode leftDist = node.left == null ? thisDistNode : furthestLeaf(node.left, distance + 1);
     DistNode rightDist = node.right == null ? thisDistNode : furthestLeaf(node.right, distance + 1);
@@ -54,7 +56,7 @@ public class GTree<T extends Comparable<? super T>> {
     }
   }
 
-  private class DistNode {
+  class DistNode {
     public int dist;
     public Node<T> node;
 
@@ -64,7 +66,7 @@ public class GTree<T extends Comparable<? super T>> {
     }
   }
 
-  private Node<T> findParent(T value, Node<T> node, Node<T> parent) {
+  Node<T> findParent(T value, Node<T> node, Node<T> parent) {
     if(node == null) return parent;
 
     if(value.equals(node.value)) return node;
@@ -80,17 +82,17 @@ public class GTree<T extends Comparable<? super T>> {
     return leftMostLeaf(root);
   }
 
-  private Node<T> leftMostLeaf(Node<T> node) {
+  Node<T> leftMostLeaf(Node<T> node) {
     if(node == null) return null;
     if(node.left == null) return node;
     return leftMostLeaf(node.left);
   }
 
-  public Node<T> rightMostLeaf() {
+  Node<T> rightMostLeaf() {
     return rightMostLeaf(root);
   }
 
-  private Node<T> rightMostLeaf(Node<T> node) {
+  Node<T> rightMostLeaf(Node<T> node) {
     if(node == null) return null;
     if(node.right == null) return node;
     return rightMostLeaf(node.right);
@@ -100,7 +102,7 @@ public class GTree<T extends Comparable<? super T>> {
     return contains(value, root);
   }
 
-  private boolean contains(T value, Node<T> node) {
+  boolean contains(T value, Node<T> node) {
     if(node == null) return false;
 
     if(value.equals(node.value)) return true;
