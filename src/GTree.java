@@ -1,6 +1,6 @@
 public class GTree<T extends Comparable<? super T>> {
   public GTree<T> add(T value) {
-    if (root == null) {
+    if(root == null) {
       root = new Node<T>(value, null, null);
     } else {
       add(value, root);
@@ -9,13 +9,13 @@ public class GTree<T extends Comparable<? super T>> {
   }
 
   private void add(T value, Node<T> node) {
-    if (value.compareTo(node.value) < 0) {
-      if (node.left == null)
+    if(value.compareTo(node.value) < 0) {
+      if(node.left == null)
         node.left = new Node<T>(value, null, null);
       else
         add(value, node.left);
     } else {
-      if (node.right == null) {
+      if(node.right == null) {
         node.right = new Node<T>(value, null, null);
       } else {
         add(value, node.right);
@@ -23,20 +23,20 @@ public class GTree<T extends Comparable<? super T>> {
     }
   }
 
-  public T remove(T value) {
-    Node<T> parent = findParent(value, root, null);
-    if (parent == null) throw new RuntimeException("Not Found");
-    if (value.compareTo(parent.value) < 0) {
-      parent.left = null;
-    } else {
-      parent.right = null;
-    }
-    return value;
-  }
+//  public T remove(T value) {
+//    Node<T> parent = findParent(value, root, null);
+//    if(parent == null) throw new RuntimeException("Not Found");
+//    if(value.compareTo(parent.value) < 0) {
+//      parent.left = null;
+//    } else {
+//      parent.right = null;
+//    }
+//    return value;
+//  }
 
-  private void percolateDown(Node<T> node, Node<T> replacement) {
-    if(node)
-  }
+//  private void percolateDown(Node<T> node, Node<T> replacement) {
+//    if(node)
+//  }
 
   public T furthestLeaf() {
     return furthestLeaf(root, 0).node.value;
@@ -47,7 +47,7 @@ public class GTree<T extends Comparable<? super T>> {
     DistNode leftDist = node.left == null ? thisDistNode : furthestLeaf(node.left, distance + 1);
     DistNode rightDist = node.right == null ? thisDistNode : furthestLeaf(node.right, distance + 1);
 
-    if (leftDist.dist > rightDist.dist) {
+    if(leftDist.dist > rightDist.dist) {
       return leftDist;
     } else {
       return rightDist;
@@ -65,11 +65,11 @@ public class GTree<T extends Comparable<? super T>> {
   }
 
   private Node<T> findParent(T value, Node<T> node, Node<T> parent) {
-    if (node == null) return parent;
+    if(node == null) return parent;
 
-    if (value.equals(node.value)) return node;
+    if(value.equals(node.value)) return node;
 
-    if (value.compareTo(node.value) < 0) {
+    if(value.compareTo(node.value) < 0) {
       return findParent(value, node.left, node);
     } else {
       return findParent(value, node.right, node);
@@ -81,9 +81,9 @@ public class GTree<T extends Comparable<? super T>> {
   }
 
   private Node<T> leftMostLeaf(Node<T> node) {
-    if (node == null) return null;
-    if (node.left == null) return node;
-    return null;
+    if(node == null) return null;
+    if(node.left == null) return node;
+    return leftMostLeaf(node.left);
   }
 
   public Node<T> rightMostLeaf() {
@@ -91,9 +91,9 @@ public class GTree<T extends Comparable<? super T>> {
   }
 
   private Node<T> rightMostLeaf(Node<T> node) {
-    if (node == null) return null;
-    if (node.right == null) return node;
-    return null;
+    if(node == null) return null;
+    if(node.right == null) return node;
+    return rightMostLeaf(node.right);
   }
 
   public boolean contains(T value) {
@@ -101,11 +101,11 @@ public class GTree<T extends Comparable<? super T>> {
   }
 
   private boolean contains(T value, Node<T> node) {
-    if (node == null) return false;
+    if(node == null) return false;
 
-    if (value.equals(node.value)) return true;
+    if(value.equals(node.value)) return true;
 
-    if (value.compareTo(node.value) < 0) {
+    if(value.compareTo(node.value) < 0) {
       return contains(value, node.left);
     } else {
       return contains(value, node.right);
@@ -114,7 +114,7 @@ public class GTree<T extends Comparable<? super T>> {
 
   Node<T> root;
 
-  static class Node<T> implements Comparable<Node<? super T>> {
+  static class Node<T extends Comparable<? super T>> implements Comparable<Node<T>> {
     public final T value;
     public Node<T> left;
     public Node<T> right;
@@ -125,16 +125,29 @@ public class GTree<T extends Comparable<? super T>> {
       this.right = right;
     }
 
-    public boolean equals(Node<T> node) {
-      if (node == null) return false;
+    @Override
+    public boolean equals(Object o) {
+      if(this == o) return true;
+      if(o == null || getClass() != o.getClass()) return false;
+
+      Node<?> node = (Node<?>) o;
+
       return value.equals(node.value) &&
-              left.equals(node.left) &&
-              right.equals(node.right);
+          !(left != null ? !left.equals(node.left) : node.left != null) &&
+          !(right != null ? !right.equals(node.right) : node.right != null);
+
     }
 
-    public int compareTo(Node<? super T> node) {
+    @Override
+    public int hashCode() {
+      int result = value.hashCode();
+      result = 31 * result + (left != null ? left.hashCode() : 0);
+      result = 31 * result + (right != null ? right.hashCode() : 0);
+      return result;
+    }
 
-      return 0;
+    public int compareTo(Node<T> node) {
+      return value.compareTo(node.value);
     }
   }
 }
