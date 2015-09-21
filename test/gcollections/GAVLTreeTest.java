@@ -31,4 +31,16 @@ public class GAVLTreeTest extends TestCase {
     assertTrue("tree should contain added nodes", GAVLTree.contains(root, 4));
     assertTrue("tree should contain added nodes", GAVLTree.contains(root, -1));
   }
+
+  public void testRotateLeft() throws Exception {
+    GNode tree = node(1, node(-1), node(2, null, node(3)));
+    GNode rotatedTree = GAVLTree.rotateLeft(tree);
+    assertTrue("rotation should work", GAVLTree.equals(rotatedTree, node(2, node(1, node(-1), null), node(3))));
+  }
+
+  public void testRotateRight() throws Exception {
+    GNode tree = node(1, node(-1, node(-2, node(-3), null), null), null);
+    GNode rotatedTree = GAVLTree.rotateRight(tree);
+    assertTrue("rotation should work", GAVLTree.equals(rotatedTree, node(-1, node(-2, node(-3), null), node(1))));
+  }
 }

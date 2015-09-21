@@ -33,4 +33,12 @@ public class GAVLTree {
         (nodeA.right == nodeB.right || equals(nodeA.right, nodeB.right));
     return false;
   }
+
+  public static GNode rotateLeft(GNode node) {
+    return node(node.right.value, node(node.value, node.left, null), node.right.right);
+  }
+
+  public static GNode rotateRight(GNode node) {
+    return node(node.left.value, node.left.left, node(node.value, null, node.right));
+  }
 }
