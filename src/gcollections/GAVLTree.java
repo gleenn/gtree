@@ -28,10 +28,10 @@ public class GAVLTree {
 
   public static boolean equals(GNode nodeA, GNode nodeB) {
     if(nodeA == nodeB) return true;
-    if(nodeA != null && nodeB != null) return nodeA.value.equals(nodeB.value) &&
+    return (nodeA != null && nodeB != null) &&
+        (nodeA.value.equals(nodeB.value) &&
         (nodeA.left == nodeB.left || equals(nodeA.left, nodeB.left)) &&
-        (nodeA.right == nodeB.right || equals(nodeA.right, nodeB.right));
-    return false;
+        (nodeA.right == nodeB.right || equals(nodeA.right, nodeB.right)));
   }
 
   public static GNode rotateLeft(GNode node) {
