@@ -4,6 +4,11 @@ class GNode implements Comparable<GNode> {
   public final Comparable value;
   public final GNode left;
   public final GNode right;
+  public final int balance;
+
+  public static GNode node(Comparable value, GNode left, GNode right, int balance) {
+    return new GNode(value, left, right, balance);
+  }
 
   public static GNode node(Comparable value, GNode left, GNode right) {
     return new GNode(value, left, right);
@@ -17,16 +22,34 @@ class GNode implements Comparable<GNode> {
     return new GNode(null);
   }
 
+  public GNode(Comparable value, GNode left, GNode right, int balance) {
+    this.value = value;
+    this.left = left;
+    this.right = right;
+    this.balance = balance;
+  }
+
   public GNode(Comparable value, GNode left, GNode right) {
     this.value = value;
     this.left = left;
     this.right = right;
+    this.balance = getBalance(left, right);
   }
 
   public GNode(Comparable value) {
     this.value = value;
     this.left = null;
     this.right = null;
+    this.balance = 0;
+  }
+
+  int getBalance(GNode left, GNode right) {
+    return height(right) - height(left);
+  }
+
+  int height(GNode node) {
+    if(node == null) return 0;
+    return 1 + Math.max(height(node.left), height(node.right));
   }
 
   @Override
@@ -39,7 +62,6 @@ class GNode implements Comparable<GNode> {
     if(!value.equals(gNode.value)) return false;
     if(left != null ? !left.equals(gNode.left) : gNode.left != null) return false;
     return !(right != null ? !right.equals(gNode.right) : gNode.right != null);
-
   }
 
   @Override
@@ -56,6 +78,7 @@ class GNode implements Comparable<GNode> {
 
   public String toString() {
     if(value == null) return "()";
+    if(left == null && right == null) return "("+value+")";
     return "(" + value + ", " + left + ", " + right + ")";
   }
 }
