@@ -39,7 +39,7 @@ public class GAVLTreeTest extends TestCase {
   public void testSize_worksWithALotOfValues() {
     Random random = new Random();
     List<Integer> vals = new ArrayList<Integer>();
-    for(int i=0; i< 1000; i++) vals.add(random.nextInt());
+    for(int i = 0; i < 1000; i++) vals.add(random.nextInt());
 
     GNode node = node(vals.get(0)); // smell, why can't I have an empty node...
     for(int i = 1; i < vals.size(); i++) node = GAVLTree.add(node, vals.get(i));
@@ -75,8 +75,7 @@ public class GAVLTreeTest extends TestCase {
     //      2   5
     //    1   3
 
-    assertTrue("balances correctly - " + root, GAVLTree.equals(root, node(4, node(2, node(1), node(3)), node(5)))); // not sure if this is right
-
+    assertTrue("balances correctly - " + root, GAVLTree.equals(root, node(4, node(2, node(1), node(3)), node(5))));
   }
 
   public void testRotateLeft() throws Exception {
@@ -121,6 +120,39 @@ public class GAVLTreeTest extends TestCase {
 
     GNode deepNodeLR = GAVLTree.balance(node(3, node(1, null, node(2)), null));
     assertTrue("balances LR bias - " + deepNodeLR, GAVLTree.equals(nodeLR, deepBalanced));
-    */
+    //*/
+  }
+
+  public void testMaxHeightLessThanTheoretical_whenConsecutivelyAdded() {
+    int N = 10000;
+    int theoreticalHeight = theoreticalMaxHeightOfTreeOfSize(N);
+    GNode node = new GNode(0);
+    for(int i = 1; i < N; i++) node = GAVLTree.add(node, i);
+    int height = GAVLTree.height(node);
+    assertTrue("height of tree is less than theoretical max", height < theoreticalHeight);
+  }
+
+  public void testMaxHeightLessThanTheoretical_whenRandomlyAdded() {
+    int N = 10000;
+    int theoreticalHeight = theoreticalMaxHeightOfTreeOfSize(N);
+    for(int i = 0; i < 1; i++) {
+      int height = GAVLTree.height(makeRandomTree(N));
+      assertTrue("height of tree is less than theoretical max", height < theoreticalHeight);
+    }
+  }
+
+  private int theoreticalMaxHeightOfTreeOfSize(int n) {
+    return (int) (1.44 * logBase2(n));
+  }
+
+  private static double logBase2(int val) {
+    return 31 - Integer.numberOfLeadingZeros(val);
+  }
+
+  public GNode makeRandomTree(final int N) {
+    Random random = new Random();
+    GNode node = node(random.nextInt());
+    for(int i = 1; i < N; i++) node = GAVLTree.add(node, random.nextInt());
+    return node;
   }
 }

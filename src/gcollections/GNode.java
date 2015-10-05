@@ -44,12 +44,7 @@ class GNode implements Comparable<GNode> {
   }
 
   int getBalance(GNode left, GNode right) {
-    return height(right) - height(left);
-  }
-
-  int height(GNode node) {
-    if(node == null) return 0;
-    return 1 + Math.max(height(node.left), height(node.right));
+    return GAVLTree.height(right) - GAVLTree.height(left);
   }
 
   @Override

@@ -1,8 +1,13 @@
 package gcollections;
 
+import java.util.Random;
+
 import static gcollections.GNode.node;
 
 public class GAVLTree {
+
+  public static final Random RANDOM = new Random();
+
   public static <T> GNode add(GNode node, Comparable value) {
     if(node == null) return node(value);
     int compared = value.compareTo(node.value);
@@ -63,5 +68,10 @@ public class GAVLTree {
 
   public static GNode rotateRight(GNode node) {
     return node(node.left.value, node.left.left, node(node.value, node.left.right, node.right));
+  }
+
+  public static int height(GNode node) {
+    if(node == null) return 0;
+    return 1 + Math.max(height(node.left), height(node.right));
   }
 }
